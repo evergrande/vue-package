@@ -12,6 +12,7 @@
         <template v-for="(item, index) in data">
           <task-step-item :style="{width: 100/data.length + '%'}" :key="'step' + index" :editable="editable" :colors="colors"
            :data="item" :showItem="showItem" :states="states" :delay="delay" :index="index" @dateChange="dateChange" :datas="data"
+           :clickItem="clickItem"
            />
         </template>
 
@@ -54,6 +55,10 @@ import TaskStepItem from "./TaskStepItem";
        delay: {
          type: Number,
          default: 7
+       },
+       clickItem: {
+         type: Function,
+         default: null,
        }
      },
 

@@ -1,5 +1,5 @@
 <template id="">
-<div class="hd-task-step-item">
+<div class="hd-task-step-item" :class="{clickable:clickHandle}" @click="clickHandle">
 
   <div class="hd-step-info">
 
@@ -166,6 +166,10 @@ export default {
     index: {
       type: Number,
       default: -1
+    },
+    clickItem: {
+      type: Function,
+      default: null
     }
   },
 
@@ -204,7 +208,7 @@ export default {
       this.data.planstime = ps.toFormat("YYYY-MM-DD");
       this.data.planotime = pe.toFormat("YYYY-MM-DD");
 
-     // console.log("--->", val, this.data.planstime, this.data.planotime )
+      console.log("--->", val, this.data.planstime, this.data.planotime )
       // this.planTimeRange = [ps.toFormat("YYYYMMDD"), pe.toFormat("YYYYMMDD")];
       this.$emit("dateChange", {context: this, data: this.data, index: this.index});
        
@@ -241,6 +245,11 @@ export default {
        if(this.data.callback) this.data.callback(e, this.data, this.arrowstate);
 
 
+    },
+    clickHandle() {
+      if (this.clickItem) {
+        this.clickItem(this);
+      }
     }
   }
 
@@ -308,7 +317,7 @@ function PostponeIn7Filter(context) {
   this.action = function() {
     let date = new Date(Date.parse(this.context.data.planotime.split(" ")[0]));
     let day = date.getDaysBetween(new Date());
-    //console.log("预警: ", Math.abs(day) <= (this.context.delay-1))
+    console.log("预警: ", Math.abs(day) <= (this.context.delay-1))
     if (day <= 0 && Math.abs(day) <= (this.context.delay-1) && this.context.data.state == this.context.states[1]) {
        this.context.color = this.context.colors[1];
     }
@@ -336,21 +345,13 @@ function PostponeStateMSg(context) {
 }
 
 
-/**
-* 延期处理
-* 
-* @update  2018-05-18 towaywu@gmail.com
-*  更加需求调整为不需要判断日期来限制延期
- */
 function PostponeOver7Filter(context) {
   this.context = context
   this.action = function() {
     let date = new Date(Date.parse(this.context.data.planotime.split(" ")[0]));
     let day = date.getDaysBetween(new Date());
-    //console.log("延期", day, this.context.data.title, this.context.data.state)
-
-    //this.context.data.state == this.context.states[1]
-    if (day > 0) {
+    console.log("延期", day, this.context.data.title, this.context.data.state)
+    if (day > 0  && this.context.data.state == this.context.states[1]) {
        this.context.color = this.context.colors[2];
     }
   }
@@ -375,6 +376,9 @@ function FinishedFilter(context) {
   width: 20%;
   font-size: 11px;
   min-width: 160px;
+}
+.hd-task-step-item.clickable:hover {
+  background-color: lightsteelblue;
 }
 
 
