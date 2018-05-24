@@ -60,7 +60,8 @@
 </template>
 
 <script>
-require("../../tools/dateutil")
+require("../../tools/dateutil");
+const { STATES_TYPE_INDEX, STATUS_TYPE_INDEX } = require('./const.js');
 
 export default {
   name: "TaskStepItem",
@@ -263,6 +264,7 @@ export default {
  * 没有计划完成时间, 代表任务还在进行:
  * 计划完成时间 < 当前时间 => 状态正常
  * 计划完成时间 > 当前时间 => 状态延期:
+ * 计划开始时间 > 实际开始时间 且未完成 => 状态延期
  * |计划完成时间 - 当前时间| < 7天 状态延期7天内,
  * |计划完成时间 - 当前时间| > 7天 状态延期超过7天
  */
@@ -271,6 +273,7 @@ function FilterControl(context) {
     new MilestoneFilter(context),
     new PostponeIn7Filter(context),
     new PostponeOver7Filter(context),
+    new PostponeStartFilter(context),
     new FinishedFilter(context),
     new PostponeStateMSg(context),
     new NormalFilter(context)
@@ -288,8 +291,8 @@ function NormalFilter(context) {
   this.action = function() {
      let date = new Date(Date.parse(this.context.data.planotime.split(" ")[0]));
      let day = date.getDaysBetween(new Date());
-     if(day < 0 && Math.abs(day) > (this.context.delay-1) && this.context.data.state == this.context.states[1]) {
-         this.context.color = this.context.colors[0]
+     if(day < 0 && Math.abs(day) > (this.context.delay-1) && this.context.data.state == this.context.states[STATES_TYPE_INDEX.UNDERWAY]) {
+         this.context.color = this.context.colors[STATUS_TYPE_INDEX.NORMAL]
      }
   }
 }
@@ -297,7 +300,7 @@ function NormalFilter(context) {
 function MilestoneFilter(context) {
    this.context = context;
    this.action = function() {
-     if(this.context.data.state == this.context.states[2]) {
+     if(this.context.data.state == this.context.states[STATES_TYPE_INDEX.FINISHED]) {
        this.context.selected = true;
      } else {
        this.context.selected = false;
@@ -318,8 +321,8 @@ function PostponeIn7Filter(context) {
     let date = new Date(Date.parse(this.context.data.planotime.split(" ")[0]));
     let day = date.getDaysBetween(new Date());
     console.log("预警: ", Math.abs(day) <= (this.context.delay-1))
-    if (day <= 0 && Math.abs(day) <= (this.context.delay-1) && this.context.data.state == this.context.states[1]) {
-       this.context.color = this.context.colors[1];
+    if (day <= 0 && Math.abs(day) <= (this.context.delay-1) && this.context.data.state == this.context.states[STATES_TYPE_INDEX.UNDERWAY]) {
+       this.context.color = this.context.colors[STATUS_TYPE_INDEX.POSTPONE_IN7];
     }
 
   }
@@ -330,15 +333,15 @@ function PostponeStateMSg(context) {
   this.action = function() {
     let date = new Date(Date.parse(this.context.data.planotime.split(" ")[0]));
     let day = date.getDaysBetween(new Date());
-    if (day > 0 && this.context.data.state == this.context.states[1]) {
+    if (day > 0 && this.context.data.state == this.context.states[STATES_TYPE_INDEX.UNDERWAY]) {
        this.context.stateMsg = "已延期<strong class='tc-danger'>" + day + "</strong>天";
     }
 
-    if (this.context.data.state == this.context.states[0]) {
+    if (this.context.data.state == this.context.states[STATES_TYPE_INDEX.NOT_START]) {
        this.context.stateMsg = "未开始";
     }
 
-    if(day < 0 && this.context.data.state == this.context.states[1]) {
+    if(day < 0 && this.context.data.state == this.context.states[STATES_TYPE_INDEX.UNDERWAY]) {
        this.context.stateMsg = "进行中"
     }
   }
@@ -351,17 +354,31 @@ function PostponeOver7Filter(context) {
     let date = new Date(Date.parse(this.context.data.planotime.split(" ")[0]));
     let day = date.getDaysBetween(new Date());
     console.log("延期", day, this.context.data.title, this.context.data.state)
-    if (day > 0  && this.context.data.state == this.context.states[1]) {
-       this.context.color = this.context.colors[2];
+    if (day > 0  && this.context.data.state == this.context.states[STATES_TYPE_INDEX.UNDERWAY]) {
+       this.context.color = this.context.colors[STATUS_TYPE_INDEX.POSTPONE_OVER7];
     }
   }
+}
+
+function PostponeStartFilter(context) {
+  this.context = context;
+  this.action = function() {
+  let date = new Date(Date.parse(this.context.data.planstime.split(" ")[0]));
+  let day = date.getDaysBetween(new Date());
+  console.log("延期", day, this.context.data.title, this.context.data.state)
+  if (day > 0  && this.context.data.state == this.context.states[STATES_TYPE_INDEX.NOT_START]) {
+     this.context.color = this.context.colors[STATUS_TYPE_INDEX.POSTPONE_OVER7]; // 暂时没有把开始延期独立出来，仍使用延期的状态
+  }
+  
+}
+
 }
 
 function FinishedFilter(context) {
   this.context = context
   this.action = function() {
-    if (this.context.data.state == this.context.states[2]) {
-      this.context.color = this.context.colors[3];
+    if (this.context.data.state == this.context.states[STATES_TYPE_INDEX.FINISHED]) {
+      this.context.color = this.context.colors[STATUS_TYPE_INDEX.FINISHED];
       this.context.stateMsg = "已完成";
     }
   }

@@ -40,7 +40,7 @@ import TaskStepItem from "./TaskStepItem";
 
        colors: {
          type: Array,
-         default: ()=>[ /*进度正常*/ "#529DFF", /*延期7天内*/ "#FFC200", /*延期超7天*/ "#FF3D3D", /*完成*/ "#94C93A"]
+         default: ()=>[ /*进度正常*/ "#529DFF", /*延期7天内*/ "#FFC200", /*延期超7天*/ "#FF3D3D", /*完成*/ "#94C93A", /*开始延期*/ "ff6666"]
        },
 
        showItem: {
