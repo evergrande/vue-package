@@ -1,6 +1,6 @@
 {
   "name": "vue-package",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "description": "集中vue功能",
   "main": "index.js",
   "scripts": {
