@@ -39,7 +39,7 @@ VuePackage.install = function(Vue, option) {
   Vue.component("linker", Linker);
   Vue.component("NavBar", NavBar);
   Vue.component("NavBarItem", NavBarItem);
-  Vue.component("TaskStep", TaskStep); //老版
+  // Vue.component("TaskStep", TaskStep); //老版
   Vue.component("HdTaskStep", HdTaskStep);//最新版
   Vue.component("HdPanel", Panel);
   Vue.component("FaIcon", FaIcon);

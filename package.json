@@ -1,6 +1,6 @@
 {
   "name": "vue-package",
-  "version": "2.3.11",
+  "version": "2.3.12",
   "description": "集中vue功能",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "towaywu@gmail.com[will]",
   "license": "ISC",
   "dependencies": {
-    "iview": "^2.9.2",
+    "iview": "2.9.2",
     "jquery": "^3.2.1",
     "moment": "^2.20.1",
     "underscore": "^1.8.3",
