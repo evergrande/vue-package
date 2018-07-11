@@ -72,9 +72,11 @@
 
 .gantt-task {
   display: block;
-  height: 533px;
-  overflow: auto;
   margin: 0 auto;
+  height: 100%;
+  /* overflow: auto; */
+  /* overflow-y: auto; */
+  overflow-x: auto;
   overflow-y: hidden;
 }
 
@@ -108,6 +110,7 @@
 
 .gantt-data-area {
   position: relative;
+  overflow-y: auto;
 }
 
 

@@ -1,27 +1,41 @@
-<template id="">
+<template>
 <div class="gantt-container">
 
   <!-- <div class="gantt-grid"></div> -->
   <div class="gantt-task-panel">
-    <a href="#" class="gantt-control gantt-control-left" @click.prevent="toleft">
+    <a href="#"
+       class="gantt-control gantt-control-left"
+       @click.prevent="toleft">
       <fa-icon type="angle-double-left"></fa-icon>
     </a>
-    <a href="#" class="gantt-control gantt-control-right" @click.prevent="toright">
+    <a href="#"
+       class="gantt-control gantt-control-right"
+       @click.prevent="toright">
       <fa-icon type="angle-double-right"></fa-icon>
     </a>
 
     <div class="gantt-task-row">
       <ul>
-        <li :key="'row' + index" v-for="(item,index) in row" :style="{height: (cellheight+10) + 'px', lineHeight: (cellheight+10) + 'px'}">{{item}}</li>
+        <li :key="'row' + index"
+            v-for="(item,index) in row"
+            :style="{height: (cellheight+10) + 'px', lineHeight: (cellheight+10) + 'px'}">{{item}}</li>
       </ul>
     </div>
-    <div class="gantt-task" @scroll="scroll" ref="task">
+    <div class="gantt-task"
+         @scroll="scroll"
+         ref="task">
 
-      <div class="gantt-task-scale" ref="scale">
+      <div class="gantt-task-scale"
+           ref="scale">
 
-        <div class="gantt-scale-line" v-for="(item,i) in times" :key="'line' + i" :style='{width: totalwidth + "px"}'>
-          <div class="gantt-scale-cell" v-for="(sub,si) in item" :key="'cell' + si"
-          :style="{width: sub.width + 'px', height: '15px', lineHeight: '15px'}">{{sub.label}}</div>
+        <div class="gantt-scale-line"
+             v-for="(item,i) in times"
+             :key="'line' + i"
+             :style='{width: totalwidth + "px"}'>
+          <div class="gantt-scale-cell"
+               v-for="(sub,si) in item"
+               :key="'cell' + si"
+               :style="{width: sub.width + 'px', height: '15px', lineHeight: '15px'}">{{sub.label}}</div>
         </div>
 
       </div>
@@ -33,20 +47,28 @@
         </div>
 
         <div class="gantt-links-area">
-          <div class="gantt-link" v-for="(line,i) in lines" :key="'link' + i">
-            <div class="gantt-line" v-for="(item,index) in line" :style="{ left: item.left + 'px', top: item.top + 'px',
-                        width: item.width + 'px', height: item.height + 'px'  }" :key="'line' + index">
-                          <fa-icon type="angle-left" v-if="index==0"></fa-icon>
-                        </div>
+          <div class="gantt-link"
+               v-for="(line,i) in lines"
+               :key="'link' + i">
+            <div class="gantt-line"
+                 v-for="(item,index) in line"
+                 :style="{ left: item.left + 'px', top: item.top + 'px',
+                        width: item.width + 'px', height: item.height + 'px'  }"
+                 :key="'line' + index">
+              <fa-icon type="angle-left"
+                       v-if="index==0"></fa-icon>
+            </div>
           </div>
         </div>
 
         <div class="gantt-bars-area"
-        :style="{height: (cellheight+10)*(datas.length>row?datas.length:row) + 'px',
+             :style="{height: (cellheight+10)*(datas.length>row?datas.length:row) + 'px',
         width:totalwidth + 'px',
         backgroundImage: 'url(' + bg[type] + ')'}">
-          <div class="gantt-bar" v-for="(item,i) in datas" :key="'bar' + i" 
-          :style="{height: cellheight +'px',left: item.left + 'px', top: item.top + 'px',
+          <div class="gantt-bar"
+               v-for="(item,i) in datas"
+               :key="'bar' + i"
+               :style="{height: cellheight +'px',left: item.left + 'px', top: item.top + 'px',
            width: item.width + 'px', backgroundColor:item.color}">
             <span :style="{left: (item.width + 15) + 'px'}">{{item.manager}}</span>
           </div>
@@ -62,12 +84,17 @@
 <script>
 import us from "underscore";
 import moment from "moment";
-import {drawDay, drawWeek, drawQuarter, drawLink, drawTask} from "./gantt";
+import {
+  drawDay,
+  drawWeek,
+  drawMonth,
+  drawQuarter,
+  drawLink,
+  drawTask
+} from "./gantt";
 import bg100 from "./bg100.jpg";
 import bg80 from "./bg80.jpg";
-
-
-
+import bg320 from "./bg320.jpg";
 
 export default {
 
@@ -85,7 +112,7 @@ export default {
       target: null,
       bg: {
         week: bg80,
-        quarter: bg100
+        quarter: bg320
       },
       datas: JSON.parse(JSON.stringify(this.taskData)),
 
@@ -107,7 +134,7 @@ export default {
 
     taskData: {
       type: Array,
-      default: ()=>[]
+      default: () => []
     },
 
     type: {
@@ -118,19 +145,19 @@ export default {
   },
 
   watch: {
-     type(val) {
-        this.redraw(val);
-        console.log("hello type")
-     },
-     taskData(val) {
-       this.datas = JSON.parse(JSON.stringify(val));
-       this.redraw(this.type);
-     }
+    type(val) {
+      this.redraw(val);
+      console.log("hello type")
+    },
+    taskData(val) {
+      this.datas = JSON.parse(JSON.stringify(val));
+      this.redraw(this.type);
+    }
   },
 
   mounted() {
-      this.redraw(this.type)
-      this.target = this.$refs.task;
+    this.redraw(this.type)
+    this.target = this.$refs.task;
   },
 
   methods: {
@@ -143,32 +170,29 @@ export default {
       this.totalwidth = 0;
       this.datas = JSON.parse(JSON.stringify(this.taskData));
 
-      let time = findMinMax(this.datas);
-      if(time) {
-          drawHead.call(this, time, type);
-          drawTask.call(this, type);
-          drawLink.call(this);
+      let timeRange = findMinMax(this.datas);
+      if (timeRange) {
+        drawHead.call(this, timeRange, type);
+        drawTask.call(this, type);
+        drawLink.call(this);
       }
       //console.log(this.times);
     },
     scroll(e) {
-
       this.target = e.target;
-      this.$refs.scale.style.top=this.target.scrollTop + "px";
+      this.$refs.scale.style.top = this.target.scrollTop + "px";
 
     },
     toleft() {
-       if(this.target.scrollLeft <= 0) return;
-       this.target.scrollLeft -= 100;
+      if (this.target.scrollLeft <= 0) return;
+      this.target.scrollLeft -= 100;
     },
     toright() {
-       if(this.target.scrollLeft >= this.target.scrollWidth) return;
-       this.target.scrollLeft += 100;
-
+      if (this.target.scrollLeft >= this.target.scrollWidth) return;
+      this.target.scrollLeft += 100;
     }
   }
 }
-
 
 /**
  * 1. 找出最小时间: 最小时间从计划开始时间找
@@ -178,7 +202,7 @@ export default {
  * 5. 任务有前置任务的需要进行连接. 起始点为前置任务的计划完成时间, 结束点为当前任务的计划开始时间点.
  */
 function findMinMax(data) {
-  if(data.length == 0) return;
+  if (data.length == 0) return;
   let min = us.sortBy(data, "planstime")[0].planstime;
   let max = us.sortBy(data, "planetime")[data.length - 1].planetime;
   let rmax = us.sortBy(data, "realetime")[data.length - 1].realetime;
@@ -206,7 +230,6 @@ function findMinMax(data) {
  * [1-2-3, 4-5-6, 7-8-9, 10-11-12]
  */
 function drawHead(time, type) {
-
   if (type == "day") {
     drawDay.call(this, time);
   }
@@ -215,12 +238,14 @@ function drawHead(time, type) {
     drawQuarter.call(this, time);
   }
 
+  if (type == "month") {
+    drawMonth.call(this, time);
+  }
+
   if (type == "week") {
     drawWeek.call(this, time);
   }
 }
-
-
 </script>
 
 <style>

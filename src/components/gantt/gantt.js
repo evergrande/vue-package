@@ -7,11 +7,11 @@ function point(x, y) {
   };
 }
 
-export function drawDay(time) {
+export function drawDay(timeRange) {
   // console.log(time)
   this.times = [];
-  let start = parseInt(time[0].split("-")[0]);
-  let end = parseInt(time[1].split("-")[0]);
+  let start = parseInt(timeRange[0].split("-")[0]);
+  let end = parseInt(timeRange[1].split("-")[0]);
   let years = [];
   let months = [];
   let days = [];
@@ -69,17 +69,67 @@ export function drawDay(time) {
  * @param  {type} times description
  * @return {type}       description
  */
-export function drawQuarter(times) {
+export function drawQuarter(timeRange) {
   this.times = [];
-  this.cellwidth = 100;
-  let years = getYears.call(this, times, "quarter");
+  this.cellwidth = 320;
+  let years = getYears.call(this, timeRange, "quarter");
   this.times.push(years);
   this.times.push(getQuarter.call(this, years));
   this.start = moment(years[0].value + "-01" + "-01");
   this.end = moment(years[years.length - 1].value + "-12" + "-30");
 }
 
+/**
+ * drawMonth - 按月度
+ *
+ * @param  {type} times description
+ * @return {type}       description
+ */
+export function drawMonth(timeRange) {
+  this.times = [];
+  this.totalwidth = 0;
+  this.cellwidth = 165; // 一个月 * 12 ~= 1960
 
+  let quarters = [];
+  let months = [];
+
+  let t = moment(timeRange[0]);
+  console.log(`t:${t.calendar()}`);
+  let end = moment(timeRange[1]).add(1,'Q');
+
+  this.start = moment(t.startOf('Q'));
+  console.log(`start:${this.start.calendar()}`);
+
+  // this.start = moment(start.quarter(start.quarter()));
+  this.end = end.quarter(end.quarter()).endOf('Q');
+  console.log(`end:${this.end.calendar()}`);
+
+  let count = 0; // 至少显示4个，不然会留空
+  while(t.isBefore(end) || count < 4) {
+    count += 1;
+    const curQuarter = t.quarter();
+    quarters.push({
+      value: curQuarter,
+      label: `${t.year()}年 第${curQuarter}季度`,
+      width: this.cellwidth * 3,
+    })
+    this.totalwidth += this.cellwidth * 3;
+
+    for (let i = 0; i < 3; i += 1) {
+      const month = (curQuarter - 1) * 3 + i + 1;
+      months.push({
+        value: month,
+        label: `${month}月`,
+        width: this.cellwidth,
+      })
+    }
+    if (!t.isBefore(end)) {
+      this.end.add(1, 'Q');
+    }
+    t.add(1, 'Q');
+  }
+  this.times.push(quarters, months);
+}
 
 /**
  * drawWeek - 以周的形式
@@ -87,15 +137,15 @@ export function drawQuarter(times) {
  * @param  {type} times description
  * @return {type}       description
  */
-export function drawWeek(times) {
+export function drawWeek(timeRange) {
   this.cellwidth = 80;
   this.times = [];
   let weeks = [];
   let days = [];
   let weeklabel = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
 
-  let start = moment(times[0]);
-  let end = moment(times[1]);
+  let start = moment(timeRange[0]);
+  let end = moment(timeRange[1]);
   end.add(1, "d");
   start.subtract(7, 'd');
   while (start.add(1, 'd').day() != 1) start.add(1, "d");
@@ -148,16 +198,16 @@ function calcYearWidth(type, year) {
   }
 }
 
-export function getYears(time, type) {
-  let stime = new Date(time[0]);
-  let etime = new Date(time[1]);
+export function getYears(timeRange, type) {
+  let stime = new Date(timeRange[0]);
+  let etime = new Date(timeRange[1]);
   //计算年
   let syear = stime.getFullYear();
   let eyear = etime.getFullYear();
-  if(type=="quarter") {
-    syear -= 1;
-    eyear += 1;
-  }
+  // if(type=="quarter") {
+    // syear -= 1;
+    // eyear += 1;
+  // }
 
   let years = [];
   for (let y = syear; y <= eyear; y++) {
@@ -221,16 +271,26 @@ export function drawTask(type) {
     if (type == "quarter") {
       cell = this.totalwidth / this.end.diff(this.start, "days");
     }
+    if (type == "month") {
+      cell = this.totalwidth / this.end.diff(this.start, "days");
+      // cell = Math.ceil(cell);
+    }
 
     let sunit = start.diff(this.start, "days");
     let eunit = end.diff(this.start, "days") + 1;
+    if (i == 0) {
+      console.log(`cell: ${cell}`)
+      console.log(`sunit: ${sunit}`)
+      console.log(`start: ${start.calendar()}`)
+      console.log(`this.start: ${this.start.calendar()}`)
+    }
   //  console.log(sunit, eunit);
 
     item.left = sunit * cell;
 
     item.top = i * this.cellheight + 5 * (i * 2) + 5;
 
-    item.width = eunit * cell - item.left;
+    item.width = Math.ceil(eunit * cell - item.left);
 
     i++;
 
