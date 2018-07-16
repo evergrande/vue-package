@@ -68,16 +68,28 @@
 .gantt-task {
   display: inline-block;
   font-size: 11px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
+.gantt-data-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
 .gantt-task {
   display: block;
   margin: 0 auto;
   height: 100%;
+  /* overflow-y: hidden; */
+  /* overflow-x: auto; */
+  /* overflow: hidden; */
+}
+.gantt-data-area {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width:fit-content;
   /* overflow: auto; */
-  /* overflow-y: auto; */
-  overflow-x: auto;
-  overflow-y: hidden;
 }
 
 .gantt-task-scale {
@@ -107,13 +119,6 @@
 .gantt-scale-cell:first-child {
   border-left: #ACBDCE 1px solid;
 }
-
-.gantt-data-area {
-  position: relative;
-  overflow-y: auto;
-}
-
-
 
 .gantt-bars-area {
   position: relative;

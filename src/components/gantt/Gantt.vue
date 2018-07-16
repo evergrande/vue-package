@@ -1,6 +1,5 @@
 <template>
 <div class="gantt-container">
-
   <!-- <div class="gantt-grid"></div> -->
   <div class="gantt-task-panel">
     <a href="#"
@@ -13,7 +12,6 @@
        @click.prevent="toright">
       <fa-icon type="angle-double-right"></fa-icon>
     </a>
-
     <div class="gantt-task-row">
       <ul>
         <li :key="'row' + index"
@@ -24,58 +22,57 @@
     <div class="gantt-task"
          @scroll="scroll"
          ref="task">
-
-      <div class="gantt-task-scale"
-           ref="scale">
-
-        <div class="gantt-scale-line"
-             v-for="(item,i) in times"
-             :key="'line' + i"
-             :style='{width: totalwidth + "px"}'>
-          <div class="gantt-scale-cell"
-               v-for="(sub,si) in item"
-               :key="'cell' + si"
-               :style="{width: sub.width + 'px', height: '15px', lineHeight: '15px'}">{{sub.label}}</div>
+      <!-- <div class="gantt-data-display"> -->
+        <div class="gantt-task-scale"
+             ref="scale">
+          <div class="gantt-scale-line"
+               v-for="(item,i) in times"
+               :key="'line' + i"
+               :style='{width: totalwidth + "px"}'>
+            <div class="gantt-scale-cell"
+                 v-for="(sub,si) in item"
+                 :key="'cell' + si"
+                 :style="{width: sub.width + 'px', height: '15px', lineHeight: '15px'}"
+                 v-html="sub.label" />
+            <!-- >{{sub.label}}</div> -->
+          </div>
         </div>
 
-      </div>
-
-      <div class="gantt-data-area">
-
-        <div class="gantt-task-bg">
-
-        </div>
-
-        <div class="gantt-links-area">
-          <div class="gantt-link"
-               v-for="(line,i) in lines"
-               :key="'link' + i">
-            <div class="gantt-line"
-                 v-for="(item,index) in line"
-                 :style="{ left: item.left + 'px', top: item.top + 'px',
+        <div class="gantt-data-area"
+             ref="data-area">
+          <div class="gantt-task-bg">
+          </div>
+          <div class="gantt-links-area">
+            <div class="gantt-link"
+                 v-for="(line,i) in lines"
+                 :key="'link' + i">
+              <div class="gantt-line"
+                   v-for="(item,index) in line"
+                   :style="{ left: item.left + 'px', top: item.top + 'px',
                         width: item.width + 'px', height: item.height + 'px'  }"
-                 :key="'line' + index">
-              <fa-icon type="angle-left"
-                       v-if="index==0"></fa-icon>
+                   :key="'line' + index">
+                <fa-icon type="angle-left"
+                         v-if="index==0"></fa-icon>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="gantt-bars-area"
-             :style="{height: (cellheight+10)*(datas.length>row?datas.length:row) + 'px',
-        width:totalwidth + 'px',
-        backgroundImage: 'url(' + bg[type] + ')'}">
-          <div class="gantt-bar"
-               v-for="(item,i) in datas"
-               :key="'bar' + i"
-               :style="{height: cellheight +'px',left: item.left + 'px', top: item.top + 'px',
+          <div class="gantt-bars-area"
+               :style="{height: (cellheight+10)*(row) + 'px',
+            width:totalwidth + 'px',
+            backgroundSize: bgsize + 'px',
+            backgroundImage: 'url(' + bg[type] + ')'}">
+            <div class="gantt-bar"
+                 v-for="(item,i) in datas"
+                 :key="'bar' + i"
+                 :style="{height: cellheight +'px',left: item.left + 'px', top: item.top + 'px',
            width: item.width + 'px', backgroundColor:item.color}">
-            <span :style="{left: (item.width + 15) + 'px'}">{{item.manager}}</span>
+              <span :style="{left: (item.width + 15) + 'px'}">{{item.manager}}</span>
+            </div>
+
           </div>
-
         </div>
-
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </div>
@@ -94,7 +91,7 @@ import {
 } from "./gantt";
 import bg100 from "./bg100.jpg";
 import bg80 from "./bg80.jpg";
-import bg320 from "./bg320.jpg";
+import bgweek from "./bgweek.jpg";
 
 export default {
 
@@ -103,7 +100,7 @@ export default {
     return {
 
       times: [],
-      cellwidth: 20,
+      cellwidth: 1960 / 12,
       totalwidth: 0,
       start: 0,
       end: 0,
@@ -111,9 +108,10 @@ export default {
       lines: [],
       target: null,
       bg: {
-        week: bg80,
-        quarter: bg320
+        week: bgweek,
+        day: bgweek,
       },
+      bgsize: 0,
       datas: JSON.parse(JSON.stringify(this.taskData)),
 
       ganttType: this.type
@@ -147,6 +145,11 @@ export default {
   watch: {
     type(val) {
       this.redraw(val);
+      if (val == 'week') {
+        this.bgsize = this.cellwidth;
+      } else if (val == 'day') {
+        this.bgsize = this.cellwidth * 7;
+      }
       console.log("hello type")
     },
     taskData(val) {

@@ -8,6 +8,62 @@ function point(x, y) {
 }
 
 export function drawDay(timeRange) {
+  this.times = [];
+  this.totalwidth = 0;
+
+  let weeks = [];
+  let days = [];
+  let weeklabel = [
+    '<span style="color:lightcoral">星期天</span>',
+    "星期一", "星期二", "星期三", "星期四", "星期五",
+    '<span style="color:lightcoral">星期六</span>'
+  ];
+
+  let curDay = moment(timeRange[0]).startOf('weeks');
+  let end = moment(timeRange[1]).add(1,'weeks');
+
+  this.start = moment(curDay);
+  this.end = end.endOf('weeks');
+
+  let count = 0;
+  let lastWeek = null;
+  while (curDay.isBefore(this.end) || count < 12) {
+    count += 1;
+
+    if (!lastWeek) {
+      lastWeek = moment(curDay);
+    } else if (lastWeek.week() != curDay.week()) {
+      weeks.push({
+        value: lastWeek.week(),
+        label: `${lastWeek.format('YYYY-MM-DD')}~${moment(lastWeek).add(6, 'days').format('YYYY-MM-DD')}`,
+        width: this.cellwidth * 7,
+      })
+      lastWeek = moment(curDay);
+    }
+    this.totalwidth += this.cellwidth;
+
+    days.push({
+      value: curDay.date(),
+      label: `${weeklabel[curDay.day()]}`,
+      width: this.cellwidth,
+    })
+    if (!curDay.isBefore(this.end)) {
+      this.end.add(1, 'days');
+    }
+    curDay.add(1, 'days');
+  }
+
+  weeks.push({
+    value: curDay.date(),
+    label: `${lastWeek.format('YYYY-MM-DD')}~${moment(lastWeek).add(6, 'days').format('YYYY-MM-DD')}`,
+    width: this.cellwidth * 7,
+  })
+
+  this.times.push(weeks, days);
+}
+
+
+export function drawDay2(timeRange) {
   // console.log(time)
   this.times = [];
   let start = parseInt(timeRange[0].split("-")[0]);
@@ -105,12 +161,12 @@ export function drawMonth(timeRange) {
   console.log(`end:${this.end.calendar()}`);
 
   let count = 0; // 至少显示4个，不然会留空
-  while(t.isBefore(end) || count < 4) {
+  while(t.isBefore(this.end) || count < 4) {
     count += 1;
     const curQuarter = t.quarter();
     quarters.push({
       value: curQuarter,
-      label: `${t.year()}年 第${curQuarter}季度`,
+      label: `<span style="color:red">${t.year()}年 第${curQuarter}季度</span>`,
       width: this.cellwidth * 3,
     })
     this.totalwidth += this.cellwidth * 3;
@@ -123,7 +179,7 @@ export function drawMonth(timeRange) {
         width: this.cellwidth,
       })
     }
-    if (!t.isBefore(end)) {
+    if (!t.isBefore(this.end)) {
       this.end.add(1, 'Q');
     }
     t.add(1, 'Q');
@@ -138,6 +194,62 @@ export function drawMonth(timeRange) {
  * @return {type}       description
  */
 export function drawWeek(timeRange) {
+  this.times = [];
+  this.totalwidth = 0;
+  const dayWidth = this.cellwidth/7;
+
+  let months = [];
+  let weeks = [];
+
+  let curDay = moment(timeRange[0]).startOf('weeks');
+  // console.log(`t:${curDay.calendar()}`);
+  let end = moment(timeRange[1]).add(1,'weeks');
+
+  this.start = moment(curDay);
+
+  // this.start = moment(start.quarter(start.quarter()));
+  this.end = end.endOf('weeks');
+
+  let count = 0; // 至少显示4个，不然会留空
+  let lastMonthStart = null;
+  while(curDay.isBefore(this.end) || count < 4) {
+    count += 1;
+    // record
+    if (!lastMonthStart) {
+      lastMonthStart = moment(curDay);
+    } else if (lastMonthStart.month() != curDay.month()) {
+      months.push({
+        value: lastMonthStart.month(),
+        // moment.js的calender()有bug，个别日期显示的格式会出错!!!
+        label: `${lastMonthStart.year()}年 ${lastMonthStart.month()+1}月`,
+        width: dayWidth * (lastMonthStart.daysInMonth() - lastMonthStart.date()+1)
+      });
+      lastMonthStart = moment(curDay).startOf('months');
+    }
+
+    this.totalwidth += this.cellwidth;
+
+    let weekEnd = moment(curDay).endOf('weeks');
+    weeks.push({
+      value: curDay.week(),
+      label: `${curDay.month()+1}月${curDay.date()}日~${weekEnd.month()+1}月${weekEnd.date()}日`,
+      width: this.cellwidth,
+    })
+    if (!curDay.isBefore(this.end)) {
+      this.end.add(1, 'weeks');
+    }
+    curDay.add(7, 'days');
+  }
+  months.push({
+    value: lastMonthStart.month(),
+    label: `${lastMonthStart.year()}年 ${lastMonthStart.month() + 1}月`,
+    width: dayWidth * (curDay.date() - lastMonthStart.date())
+  })
+
+  this.times.push(months, weeks);
+}
+
+export function drawWeek2(timeRange) {
   this.cellwidth = 80;
   this.times = [];
   let weeks = [];
@@ -267,23 +379,15 @@ export function drawTask(type) {
     let start = moment(item.planstime);
     let end = moment(item.planetime);
 
-    let cell = this.cellwidth;
-    if (type == "quarter") {
-      cell = this.totalwidth / this.end.diff(this.start, "days");
-    }
-    if (type == "month") {
-      cell = this.totalwidth / this.end.diff(this.start, "days");
-      // cell = Math.ceil(cell);
-    }
+    // day cell width
+    let cell = this.totalwidth / (this.end.diff(this.start, "days") + 1);
+    console.log(this.totalwidth)
+    console.log(cell);
+    console.log(this.cellwidth)
+    console.log(this.end.diff(this.start, "days"))
 
     let sunit = start.diff(this.start, "days");
     let eunit = end.diff(this.start, "days") + 1;
-    if (i == 0) {
-      console.log(`cell: ${cell}`)
-      console.log(`sunit: ${sunit}`)
-      console.log(`start: ${start.calendar()}`)
-      console.log(`this.start: ${this.start.calendar()}`)
-    }
   //  console.log(sunit, eunit);
 
     item.left = sunit * cell;
