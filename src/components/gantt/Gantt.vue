@@ -91,7 +91,7 @@ import {
 } from "./gantt";
 import bg100 from "./bg100.jpg";
 import bg80 from "./bg80.jpg";
-import bgweek from "./bgweek.jpg";
+import bgweek from "./bgweek.svg";
 
 export default {
 

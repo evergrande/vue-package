@@ -1,0 +1,16 @@
+<svg width="140" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <g>
+  <title>background</title>
+  <rect fill="#fff" id="canvas_background" height="22" width="142" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <image xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSgBBwcHCggKEwoKEygaFhooKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKP/AABEIABQAjAMBEQACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+gEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoLEQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/APpesTpCgCzZ/wAf4VcDKp0LNWZhQAUAFABQAUAFABQAUAFABQAj/cb6UnsDKdZEBQB8uftvf8yX/wBvv/tCrgNH09UHWFAFmz/j/CrgZVOhZqzMKACgAoAKACgAoAKACgAoAKAEf7jfSk9gZTrIgKAPlz9t7/mS/wDt9/8AaFXAaGf8NX/9SZ/5Vf8A7TRyG3tPIP8Ahq//AKkz/wAqv/2mjkD2nkSw/taeXn/iis5/6iv/ANpppWJlLmJP+Guf+pJ/8q3/ANpqiQ/4a5/6kn/yrf8A2mgA/wCGuf8AqSf/ACrf/aaAD/hrn/qSf/Kt/wDaaAD/AIa5/wCpJ/8AKt/9poAP+Guf+pJ/8q3/ANpoAP8Ahrn/AKkn/wAq3/2mgA/4a5/6kn/yrf8A2mgA/wCGuf8AqSf/ACrf/aaAD/hrn/qSf/Kt/wDaaAD/AIa5/wCpJ/8AKt/9poAG/a4ypH/CE9f+ot/9poYEP/DWX/Ul/wDlV/8AtNRyE2D/AIay/wCpL/8AKr/9po5AseW/G/4s/wDC0P7F/wCJL/Zf9m+f/wAvXn+Z5nl/7C4x5fvnPtTSsNKx/9k=" id="svg_1" height="20" width="140" y="190" x="220"/>
+  <rect id="svg_3" height="20" width="20" y="0" x="0" stroke-width="0" stroke="#000" fill="#fce4cf"/>
+  <rect id="svg_4" height="20" width="20" y="0" x="120" stroke-width="0" stroke="#000" fill="#f3ffdf"/>
+ </g>
+</svg>
