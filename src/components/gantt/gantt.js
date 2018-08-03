@@ -212,7 +212,7 @@ export function drawWeek(timeRange) {
 
   let count = 0; // 至少显示4个，不然会留空
   let lastMonthStart = null;
-  while(curDay.isBefore(this.end) || count < 4) {
+  while(curDay.isBefore(this.end) || count < 12) {
     count += 1;
     // record
     if (!lastMonthStart) {
