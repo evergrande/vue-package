@@ -33,7 +33,8 @@ export default {
     link: {
       type: String,
       default: ""
-    }
+    },
+    hide: Function,
   },
 
   render(h) {
@@ -46,7 +47,10 @@ export default {
       //console.log("this.permission =>", this.permission);
     }
 
-    if(this.link && this.link.length > 0 && permission && (permission.indexOf(this.link) == -1)) return h("");
+    if(this.link && this.link.length > 0 && permission && (permission.indexOf(this.link) == -1)) {
+      this.$emit('hide', true);
+      return h("");
+    }
     this.tag&&(attrs.tag = this.tag);
     this.exact&&(attrs.exact = this.exact);
     this.append&&(attrs.append = this.append);

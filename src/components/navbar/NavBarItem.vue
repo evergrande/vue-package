@@ -1,12 +1,14 @@
-
 /**
  * 菜单栏, 带有权限控制
  */
 <template>
 <ul v-if="size">
-  <li v-for="(item, key, index) in pri_menu" :key="key" :class="{'menu-nest': spread&&item.children}">
-
-    <linker :permission="permission" :link="item.link?item.link:''" :to="item.path" @click.native="(spread&&item.children)?showchild(index):change(item)" :ref="'spread' + index" state="0">
+  <template v-for="(item, key, index) in pri_menu" :class="{'menu-nest': spread&&item.children}">
+  <li v-if="!item.hide" :key="key">
+    <linker :permission="permission" :link="item.link?item.link:''" 
+    :to="item.path" @click.native="(spread&&item.children)?showchild(index)
+    :change(item)" :ref="'spread' + index" state="0"
+    @hide="(t)=>hideItem(key, t)" >
       <i v-if="item.icon" :class="item.icon"></i> {{item.name}}
       <span class="child-control" v-if="spread&&item.children"><img :src="icon" alt="" /></span>
     </linker>
@@ -16,6 +18,7 @@
       </li>
     </ul>
   </li>
+  </template>
 </ul>
 </template>
 
@@ -121,6 +124,9 @@ export default {
       this.callback("click", menu, this.index, this.path); //回调函数
 
 
+    },
+    hideItem(key, t) {
+      this.$set(this.pri_menu[key], 'hide', t);
     },
 
     showchild(index) {
