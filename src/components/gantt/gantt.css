@@ -87,7 +87,7 @@
 .gantt-data-area {
   position: relative;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
   width:fit-content;
   /* overflow: auto; */
 }
