@@ -48,7 +48,7 @@ export default {
     }
 
     if(this.link && this.link.length > 0 && permission && (permission.indexOf(this.link) == -1)) {
-      this.$emit('hide', true);
+      //this.$emit('hide', true);
       return h("");
     }
     this.tag&&(attrs.tag = this.tag);

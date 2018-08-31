@@ -8,7 +8,7 @@
     <linker :permission="permission" :link="item.link?item.link:''" 
     :to="item.path" @click.native="(spread&&item.children)?showchild(index)
     :change(item)" :ref="'spread' + index" state="0"
-    @hide="(t)=>hideItem(key, t)" >
+     >
       <i v-if="item.icon" :class="item.icon"></i> {{item.name}}
       <span class="child-control" v-if="spread&&item.children"><img :src="icon" alt="" /></span>
     </linker>
@@ -125,9 +125,12 @@ export default {
 
 
     },
-    hideItem(key, t) {
+    /**@hide="(t)=>hideItem(key, t)"
+	hideItem(key, t) {
       this.$set(this.pri_menu[key], 'hide', t);
     },
+	
+	*/
 
     showchild(index) {
 
